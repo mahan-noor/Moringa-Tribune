@@ -1,9 +1,15 @@
 from django.http  import HttpResponse,Http404
 from django.shortcuts import render,redirect
 import datetime as dt
+from django.contrib.auth.decorators import login_required
 from .models import Article
 from .forms import NewsLetterForm,NewArticleForm
 from .email import send_welcome_email
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import  MoringaMerch
+from .serializer import MerchSerializer
+
 
 # Create your views here.
 def welcome(request):
@@ -65,6 +71,7 @@ def search_results(request):
         message = "You haven't searched for any term"
         return render(request, 'all-news/search.html',{"message":message})
 
+@login_required(login_url='/accounts/login/')
 def article(request,article_id):
     try:
         article = Article.objects.get(id = article_id)
